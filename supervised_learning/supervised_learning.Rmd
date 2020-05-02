@@ -18,6 +18,24 @@ Describe machine learning.
 
 Differentiate between supervised and unsupervised.
 
+**Supervised learning**: For each observation of the predictor measurement(s) $x_{i}$ there is an associated response measurement $y_{i}$. 
+
+* We want to fit a model that relates the response to the predictors with the aim of:
+    + Accurately predicting the response variable for future observations (prediction)
+    + Better understanding the relationship between the response and predictors (inference)
+* Examples:
+    + Linear regression
+    + Logistic regression
+    + General Additive Models
+    + Boosting
+    + Support vector machines
+
+**Unsupervised learning**: For each observation of the predictor measurement(s) $x_{i}$ there is no associated response measurement. 
+
+* We want to understand the relationships between the variables or between the observations 
+* Examples:
+    + Clustering 
+
 Give some examples.
 
 Quiz question about which of these examples is supervised learning.
@@ -61,6 +79,8 @@ question("Which of these examples could be considered a classification problem?"
 
 ## 3. Trade-Offs
 
+### Accuracy vs. Interpretability
+
 Start with Darwinian demons. Your model can't be a Darwinian demon. 
 
 If it makes extremely accurate predictions, then it will likely to be very complicated and its reasoning very difficult for humans to understand. 
@@ -84,6 +104,64 @@ Do you want it to be a specialist, very well-adapted to the current environment 
 
 Do you want it to be a generalist, passably adapted to a few environments (higher bias, lower variance)
 
-### Bias-Variance Trade-Off
+In general, as the flexibility of a method increases, its interpretability decreases. 
 
-### Accuracy-Understanding Trade-Off
+Note that a lasso relies upon the linear model but is more restrictive than OLS because it sets a number of coefficients to 0. It is also more interpretable for the same reason, in the final model the response variable will be related to a small subset of the predictors. 
+
+We might choose a more restrictive method if we're mainly interested in inference as greater interpretability is important. If we were to use splines or boosting methods, for example, we could end up with complicated estimates of $f$ which make it difficult to understand how any individual predictor is associated with the response. 
+
+Conversely, if prediction is the primary goal then we may choose a more flexible method as interpretability isn't a concern. However, it's worth noting that we can sometimes gain more accurate predictions using a less flexible method because highly flexible methods are more prone to over-fitting. 
+
+> Key takeaways: 
+>
+* The most accurate models are generally 'black boxes' that humans struggle to understand. 
+* The most interpretable models generally make second-rate predictions.
+* You can't eat your cake and have it too, so choose your goal clearly.
+
+### Training vs. Testing
+
+This tutorial won't go into the multitude of options available to measure a model's performance. Instead, it will focus on the context in which that measurement takes place. Understanding the logic of data splitting is more important than learning the formula for a particular metric.
+
+In the regression setting the most commonly used measure is the *mean squared error*:
+
+$$MSE = \frac{1}{n} \sum_{i=1}^n (y_{i} - \hat{f}(x_{i})) ^2$$
+
+However, we aren't really interested in the training MSE, instead we want to know whether $\hat{f}(x_{0}) \approx y_{0}$ where $(x_{0}, y_{0})$ is a previously unseen test observation not used to train the statistical learning method. For a large number of test observations we could compute the average squared prediction error:
+
+$$Ave(y_{0} - \hat{f}(x_{0}) ^2$$
+
+We'd like to select the model for which the average of the test MSE is as small as possible.
+
+As the flexibility of our chosen statistical learning method increases, the training MSE decreases monotonically. However, test MSE may not. 
+
+A given method may yield a small training MSE but a large test MSE because our statistical learning procedure is working too hard to find patterns in the training data, and may pick up patterns that are due to random chance rather due to true properties of $f$. Thus, the test MSE will be very large because the supposed patterns that the method found in the training data don’t exist in the test data. We almost always expect the training MSE to be smaller than the test MSE because most statistical learning methods seek to minimize the training MSE. **Overfitting** refers specifically to the case in which a less flexible model would have yielded a smaller test MSE.
+
+The flexibility level corresponding to the model with the minimal test MSE can vary considerably among data sets. There are a variety of approaches that can be used in practice to estimate this minimum point. One important method is *cross-validation*, which involves estimating the test MSE using the training data. 
+
+> Key take-aways: 
+>
+* We need to find out our model's performance in a context where it counts. 
+* There is no point serving aces in training if you double fault on match day.
+
+### Bias vs. Variance
+
+Maybe bias and variance is too technical? 
+
+* Think about what you want them to take away, not what you want to show off.
+
+The expected test MSE, for a given value of $x_{0}$ always be decomposed into the sum of 3 fundamental properties: the variance of $\hat{f}(x_{0})$, the squared bias of $\hat{f}(x_{0})$, and the variance of the error terms. 
+
+$$E(y_{0} - \hat{f}(x_{0}))^2 = Var(\hat{f}(x_{0})) + [Bias(\hat{f}(x_{0}))]^2 + Var(\epsilon)$$
+
+Variance of $\hat{f}(x_{0})$: refers to the amount by which $\hat{f}$ would change if we estimated it using a different training data set. 
+
+* Ideally the estimate of $\hat{f}$ should not vary too much between training sets. 
+* Generally, more flexible methods have higher variance
+
+Bias of $\hat{f}(x_{0})$: refers to the error that is introduced by approximating a real-life problem by a simplified model. 
+
+* Generally, more flexible methods result in less bias
+
+We can see that in general when using a more flexible method, variance increases and bias decreases. The relative rate of change of these two quantities determines whether the test MSE increases or decreases. As we increase the flexibility of a class of methods, the bias tends to initially decrease faster than the variance increases. Consequently, the expected test MSE declines. However, at some point increasing flexibility has little impact on the bias but starts to significantly increase the variance. When this happens the test MSE increases.
+
+This relationship between bias, variance, and test set MSE is referred to as the bias-variance trade-off. Good test set performance of a statistical learning method requires low variance as well as low squared bias. It's easy to obtain a method with extremely low bias but high variance (e.g. by drawing a curve that passes through every single training observation) or a method with very low variance but high bias (e.g. by fitting a horizontal line to the data). The challenge lies in finding a method for which both the variance and the squared bias are low. It's always worth bearing in mind that (very fancy) flexible methods can essentially eliminate bias but the bias-variance trade-off means there's no guarantee that they'll outperform a much simpler method.
