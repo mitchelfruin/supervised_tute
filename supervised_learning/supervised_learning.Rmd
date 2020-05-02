@@ -1,0 +1,89 @@
+---
+title: "Intro To Supervised Machine Learning"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 1. What is supervised learning?
+
+Describe machine learning.
+
+Differentiate between supervised and unsupervised.
+
+Give some examples.
+
+Quiz question about which of these examples is supervised learning.
+
+### {-} 
+
+```{r what_is_ml, echo=FALSE}
+question("How would you define machine learning?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = T),
+  answer("I don't know but if you say it people give you money.", correct = T)
+)
+```
+
+```{r is_this_supervised, echo=FALSE}
+question("Which of these examples could be considered supervised learning?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```
+
+## 2. Two types of problems
+
+Differentiate between regression and classification.
+
+Quiz question about which of these examples is classification.
+
+### {-} 
+
+```{r is_this_classification, echo=FALSE}
+question("Which of these examples could be considered a classification problem?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```
+
+## 3. Trade-Offs
+
+Start with Darwinian demons. Your model can't be a Darwinian demon. 
+
+If it makes extremely accurate predictions, then it will likely to be very complicated and its reasoning very difficult for humans to understand. 
+
+If its rationale is clear, then this simplicitly will probably make its predictions second rate.
+
+So, as with all analysis, you need to start with a clear objective in mind. Is the goal an engineering one or a scientific one?
+
+* Engineering goal: Better performance on a well defined metric. 
+    + The model's predictions are as accurate as possible.
+    + We can't tell why it makes the prediction it does, but we don't care as long as they're correct.
+* Scientific goal: Better understanding of a real world phenomenon.
+    + We understand why our model makes the predictions it does.
+    + It's predictions aren't the best, but we don't mind much because its 'reasoning' broadens our understanding.
+
+As learning is a fundamentally evolutionary process we can think in terms design and fit to the environment.
+
+Analogy with designing an animal.
+
+Do you want it to be a specialist, very well-adapted to the current environment (lower bias, higher variance)
+
+Do you want it to be a generalist, passably adapted to a few environments (higher bias, lower variance)
+
+### Bias-Variance Trade-Off
+
+### Accuracy-Understanding Trade-Off
